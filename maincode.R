@@ -382,7 +382,7 @@ scraping <- function(link, date){
   
   Top10 <-as_tibble(tbls_ls[[1]])
   
-  Top10 <- Top10[,-c(1,2,4,5,6)]
+  Top10 <- Top10[,-c(1,2,4,6,7,8)]
   Top10 <- Top10 %>%
     rename(NAME = `PLAYER NAME`)
   
