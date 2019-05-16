@@ -514,5 +514,28 @@ DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from
 
 DB1 <- left_join(DB, Measure.final2, by = c("NAME" = "NAME"))
 library(measurements)
+
+
+#occupons nous des unités mtnt
 DB1$`Driving Distance` <- round(conv_unit(DB1$`Driving Distance`,"yd","m"))
+
+DB1 <- DB1 %>% separate(`Distance Left`, into = c("feet", "inch"))
+#on rend numerique et on convertit les feets
+DB1$feet <- as.numeric(DB1$feet)
+DB1$feet <- conv_unit(DB1$feet,"ft","cm")
+
+#pareil pour les inchs
+
+DB1$inch <- as.numeric(DB1$inch)
+DB1$inch <- conv_unit(DB1$inch,"inch","cm")
+DB1$inch <- DB1$inch + DB1$feet
+
+#Tout a été réuni reste plus qu'à supprimer db1$feet et renommer l'autre, je sais c'est pas élégant désolé Léo
+#Ensuite faut faire la même pour height
+
+DB1 <- DB1 %>% separate(`Distance Left`, into = c("feet", "inch"))
+#on rend numerique et on convertit les feets
+
+
+
 
