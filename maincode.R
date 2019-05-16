@@ -230,7 +230,7 @@ scraping <- function(link, date){
   
   Average.scoring <-as_tibble(tbls_ls[[1]])
   
-  Average.scoring <- Average.scoring[,-c(1,2,4,6,7,8)]
+  Average.scoring <- Average.scoring[,-c(1,2,6,7,8)]
   Average.scoring <- Average.scoring %>%
     rename(NAME = `PLAYER NAME`,
            "Average Scoring" = `AVG`)
@@ -513,3 +513,6 @@ DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from
   reduce(left_join, by = c("NAME" = "NAME","Year" = "Year")) %>% as.tibble()
 
 DB1 <- left_join(DB, Measure.final2, by = c("NAME" = "NAME"))
+library(measurements)
+DB1$`Driving Distance` <- round(conv_unit(DB1$`Driving Distance`,"yd","m"))
+
