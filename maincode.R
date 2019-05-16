@@ -1,40 +1,3 @@
-installed.packages("dplyr")
-library(dplyr)
-library(tidyr)
-
-
-
-PGA <- PGA_Data_Historical[-3]
-
-PGA <- as_tibble(PGA)
-PGA <- PGA %>% spread(key=Variable, value= Value) #transform data to a wide format 
-
-
-#supprimer les lignes où il y a plus de 100NA 
-PGA2[] <- lapply(PGA2, function(x) {
-  if(is.factor(x)) as.numeric(as.character(x)) else x
-})
-
-sapply(PGA2, class)
-PGA3<- PGA2[rowSums(is.na(PGA2[,c(3:2074)])) <=1000, ]
-
-#enlever les colonnes o? il reste encore 90% de NA
-miss <- c()
-for(i in 1:ncol(PGA3)) {
-  if(length(which(is.na(PGA3[,i]))) > 0.90*nrow(PGA3)) miss <- append(miss,i) 
-}
-PGA4 <- PGA3[,-miss]
-
-# git checkout -b new-feature
-# git push origin new-feature
-#Comment supprimer des variables qui contiennent un certain string, reste plus qu'? trouver comment en combiner plusieurs
-install.packages("data.table")
-library(data.table)
-PGA5 <- PGA4[,!grepl("FedExCup", colnames(PGA4))]
-setDT(PGA5)
-ind = PGA5[, lapply(.SD, function(x) grepl("FedExCup", x, perl=TRUE))] 
-PGA5[,which(colSums(ind) == 0), with = FALSE]
-
 #création de la nouvelle base de donnée avec web scrapping
 
 install.packages("rvest")
@@ -59,6 +22,9 @@ library(lubridate)
 library(scales)
 library(broom)
 library(ggplot2)
+library(tidyverse)
+library(knitr)
+
 
 #première variable concernant la longueur du premier coup par joueur
 
@@ -72,10 +38,9 @@ scraping <- function(link, date){
   
   Driving.Distance <-as_tibble(tbls_ls[[1]])
   
-  Driving.Distance <- Driving.Distance[,-c(1,2,4,6)]
+  Driving.Distance <- Driving.Distance[,-c(1,2,4,6,7)]
   Driving.Distance <- Driving.Distance %>% 
     rename(NAME = `PLAYER NAME`, 
-           Attempted = `TOTAL DRIVES`, 
            "Driving Distance" = AVG.)
   
   Year <- nrow (Driving.Distance)
@@ -189,7 +154,7 @@ scraping <- function(link, date){
   
   Distance.from.20.30 <-as_tibble(tbls_ls[[1]])
   
-  Distance.from.20.30 <- Distance.from.20.30[,-c(1,2,4,6,8)]
+  Distance.from.20.30 <- Distance.from.20.30[,-c(1,2,4,6,7,8)]
   Distance.from.20.30 <- Distance.from.20.30 %>% 
     rename(NAME = `PLAYER NAME`,
            "Distance Left" = `AVG DTP`)
@@ -407,6 +372,62 @@ Top10.2008 <- scraping('https://www.pgatour.com/stats/stat.138.2008.html', 2008)
 Top10.FINAL <- rbind(Top10.2018,Top10.2017,Top10.2016,Top10.2015,Top10.2014,Top10.2013,Top10.2012,Top10.2011,Top10.2010,Top10.2009,Top10.2008)
 
 
+#extraction des données personnelles
+
+scraping <- function(link, date){
+  webpage <- link %>% read_html()
+  
+  tbls_ls <- webpage %>%
+    html_nodes("table") %>%
+    .[2] %>%
+    html_table(fill = TRUE)
+  
+  Measurements <-as_tibble(tbls_ls[[1]])
+  
+  colnames(Measurements) <- as.character(unlist(Measurements[1,]))
+  Measurements = Measurements[-1, ]
+  
+  return(Measurements)
+}
 
 
-a<-full_join(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL)
+Measurements.A <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/A_players.html')
+Measurements.B <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/B_players.html')
+Measurements.C <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/C_players.html')
+Measurements.D <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/D_players.html')
+Measurements.E <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/E_players.html')
+Measurements.F <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/F_players.html')
+Measurements.G <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/G_players.html')
+Measurements.H <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/H_players.html')
+Measurements.I <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/I_players.html')
+Measurements.J <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/J_players.html')
+Measurements.K <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/K_players.html')
+Measurements.L <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/L_players.html')
+Measurements.M <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/M_players.html')
+Measurements.N <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/N_players.html')
+Measurements.O <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/O_players.html')
+Measurements.P <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/P_players.html')
+Measurements.Q <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/Q_players.html')
+Measurements.R <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/R_players.html')
+Measurements.S <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/S_players.html')
+Measurements.T <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/T_players.html')
+Measurements.U <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/U_players.html')
+Measurements.V <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/V_players.html')
+Measurements.W <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/W_players.html')
+Measurements.X <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/X_players.html')
+Measurements.Y <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/Y_players.html')
+Measurements.Z <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.aspx?page=/data/pga/players/Z_players.html')
+
+Measure.final <- rbind(Measurements.A,Measurements.B,Measurements.C,Measurements.D,Measurements.E,Measurements.F,Measurements.G,Measurements.H,Measurements.I,Measurements.J,Measurements.K,Measurements.L,Measurements.M,Measurements.N,Measurements.O,Measurements.P,Measurements.Q,Measurements.R,Measurements.S,Measurements.T,Measurements.U,Measurements.V,Measurements.W,Measurements.X,Measurements.Y,Measurements.Z)
+
+Measure.final <- Measure.final %>% 
+  rename("NAME" = Players)
+
+Measure.final1 <- Measure.final %>% separate(NAME, into = c("Name", "Surname")) %>% select("Name","Surname", "Height", "Weight", "DOB")
+
+Measure.final2 <- Measure.final1 %>% unite("NAME", c("Surname", "Name"), sep = " ")
+
+DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL)%>%
+  reduce(left_join, by = c("NAME" = "NAME","Year" = "Year")) %>% as.tibble()
+
+DB1 <- left_join(DB, Measure.final2, by = c("NAME" = "NAME"))
