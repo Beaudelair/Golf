@@ -372,7 +372,84 @@ Top10.2008 <- scraping('https://www.pgatour.com/stats/stat.138.2008.html', 2008)
 Top10.FINAL <- rbind(Top10.2018,Top10.2017,Top10.2016,Top10.2015,Top10.2014,Top10.2013,Top10.2012,Top10.2011,Top10.2010,Top10.2009,Top10.2008)
 
 
-#extraction des données personnelles
+
+
+#variable sur les points, qui nous permet de voir s'il a fait des bons scores dans les tournois importants
+
+scraping <- function(link, date){
+  webpage <- link %>% read_html()
+  
+  tbls_ls <- webpage %>%
+    html_nodes("table") %>%
+    .[2] %>%
+    html_table(fill = TRUE)
+  
+  
+  Money <-as_tibble(tbls_ls[[1]])
+  
+  Money <- Money[,-c(1,2,4,6)]
+  Money <- Money %>%
+    rename(NAME = `PLAYER NAME`)
+  
+  Year <- nrow (Money)
+  Money$Year <- rep(date, time= nrow (Money))
+  return(Money)
+}
+
+Money.2018 <- scraping('https://www.pgatour.com/stats/stat.109.2018.html', 2018)
+Money.2017 <- scraping('https://www.pgatour.com/stats/stat.109.2017.html', 2017)
+Money.2016 <- scraping('https://www.pgatour.com/stats/stat.109.2016.html', 2016)
+Money.2015 <- scraping('https://www.pgatour.com/stats/stat.109.2015.html', 2015)
+Money.2014 <- scraping('https://www.pgatour.com/stats/stat.109.2014.html', 2014)
+Money.2013 <- scraping('https://www.pgatour.com/stats/stat.109.2013.html', 2013)
+Money.2012 <- scraping('https://www.pgatour.com/stats/stat.109.2012.html', 2012)
+Money.2011 <- scraping('https://www.pgatour.com/stats/stat.109.2011.html', 2011)
+Money.2010 <- scraping('https://www.pgatour.com/stats/stat.109.2010.html', 2010)
+Money.2009 <- scraping('https://www.pgatour.com/stats/stat.109.2009.html', 2009)
+Money.2008 <- scraping('https://www.pgatour.com/stats/stat.109.2008.html', 2008)
+
+
+Money.FINAL <- rbind(Money.2018,Money.2017,Money.2016,Money.2015,Money.2014,Money.2013,Money.2012,Money.2011,Money.2010,Money.2009,Money.2008)
+
+#variable qui explique si le joueur est consistant ou non. C'est à dire s'il est capable de performer plusieurs tournois de suite en finissant dans les 70 meilleurs après deuc jours
+
+scraping <- function(link, date){
+  webpage <- link %>% read_html()
+  
+  tbls_ls <- webpage %>%
+    html_nodes("table") %>%
+    .[2] %>%
+    html_table(fill = TRUE)
+  
+  
+  Cuts <-as_tibble(tbls_ls[[1]])
+  
+  Cuts <- Cuts[,-c(1,2,5)]
+  Cuts <- Cuts %>%
+    rename(NAME = `PLAYER NAME`)
+  
+  Year <- nrow (Cuts)
+  Cuts$Year <- rep(date, time= nrow (Cuts))
+  return(Cuts)
+}
+
+Cuts.2018 <- scraping('https://www.pgatour.com/stats/stat.122.2018.html', 2018)
+Cuts.2017 <- scraping('https://www.pgatour.com/stats/stat.122.2017.html', 2017)
+Cuts.2016 <- scraping('https://www.pgatour.com/stats/stat.122.2016.html', 2016)
+Cuts.2015 <- scraping('https://www.pgatour.com/stats/stat.122.2015.html', 2015)
+Cuts.2014 <- scraping('https://www.pgatour.com/stats/stat.122.2014.html', 2014)
+Cuts.2013 <- scraping('https://www.pgatour.com/stats/stat.122.2013.html', 2013)
+Cuts.2012 <- scraping('https://www.pgatour.com/stats/stat.122.2012.html', 2012)
+Cuts.2011 <- scraping('https://www.pgatour.com/stats/stat.122.2011.html', 2011)
+Cuts.2010 <- scraping('https://www.pgatour.com/stats/stat.122.2010.html', 2010)
+Cuts.2009 <- scraping('https://www.pgatour.com/stats/stat.122.2009.html', 2009)
+Cuts.2008 <- scraping('https://www.pgatour.com/stats/stat.122.2008.html', 2008)
+
+
+Cuts.FINAL <- rbind(Cuts.2018,Cuts.2017,Cuts.2016,Cuts.2015,Cuts.2014,Cuts.2013,Cuts.2012,Cuts.2011,Cuts.2010,Cuts.2009,Cuts.2008)
+
+
+#extraction des données personnelles, concernant taille et tout ça
 
 scraping <- function(link, date){
   webpage <- link %>% read_html()
@@ -420,14 +497,19 @@ Measurements.Z <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.
 
 Measure.final <- rbind(Measurements.A,Measurements.B,Measurements.C,Measurements.D,Measurements.E,Measurements.F,Measurements.G,Measurements.H,Measurements.I,Measurements.J,Measurements.K,Measurements.L,Measurements.M,Measurements.N,Measurements.O,Measurements.P,Measurements.Q,Measurements.R,Measurements.S,Measurements.T,Measurements.U,Measurements.V,Measurements.W,Measurements.X,Measurements.Y,Measurements.Z)
 
-Measure.final <- Measure.final %>% 
-  rename("NAME" = Players)
 
-Measure.final1 <- Measure.final %>% separate(NAME, into = c("Name", "Surname")) %>% select("Name","Surname", "Height", "Weight", "DOB")
+#Les noms ne sont pas  de la même façcon que dans les autres colonnes donc il faut changer ça
+
+
+Measure.final1 <- Measure.final %>% separate(Players, into = c("Name", "Surname")) %>% select("Name","Surname", "Height", "Weight", "DOB")
 
 Measure.final2 <- Measure.final1 %>% unite("NAME", c("Surname", "Name"), sep = " ")
 
-DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL)%>%
+
+
+#création des bases de données finales avec les jointures
+
+DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL, Money.FINAL,Cuts.FINAL)%>%
   reduce(left_join, by = c("NAME" = "NAME","Year" = "Year")) %>% as.tibble()
 
 DB1 <- left_join(DB, Measure.final2, by = c("NAME" = "NAME"))
