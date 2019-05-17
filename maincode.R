@@ -498,21 +498,26 @@ Measurements.Z <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.
 Measure.final <- rbind(Measurements.A,Measurements.B,Measurements.C,Measurements.D,Measurements.E,Measurements.F,Measurements.G,Measurements.H,Measurements.I,Measurements.J,Measurements.K,Measurements.L,Measurements.M,Measurements.N,Measurements.O,Measurements.P,Measurements.Q,Measurements.R,Measurements.S,Measurements.T,Measurements.U,Measurements.V,Measurements.W,Measurements.X,Measurements.Y,Measurements.Z)
 
 
+#Création de la première base de donnée
+DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL, Money.FINAL,Cuts.FINAL)%>%
+  reduce(left_join, by = c("NAME" = "NAME","Year" = "Year")) %>% as.tibble()
+
 #Les noms ne sont pas  de la même façcon que dans les autres colonnes donc il faut changer ça
 
 
-Measure.final1 <- Measure.final %>% separate(Players, into = c("Name", "Surname")) %>% select("Name","Surname", "Height", "Weight", "DOB")
+Measure.final <- Measure.final %>% 
+  mutate(Players = sapply(strsplit(Players,","), function(x) rev(x) %>% paste0(collapse = " ")))%>% select("Players", "Height", "Weight", "DOB") %>% mutate(Players = map_chr(Players, str_squish)) 
 
-Measure.final2 <- Measure.final1 %>% unite("NAME", c("Surname", "Name"), sep = " ")
+
+
 
 
 
 #création des bases de données finales avec les jointures
 
-DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL, Money.FINAL,Cuts.FINAL)%>%
-  reduce(left_join, by = c("NAME" = "NAME","Year" = "Year")) %>% as.tibble()
 
-DB1 <- left_join(DB, Measure.final2, by = c("NAME" = "NAME"))
+
+DB1 <- left_join(DB, Measure.final, by = c("NAME" = "Players"))
 library(measurements)
 
 
