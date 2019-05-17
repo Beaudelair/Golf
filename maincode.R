@@ -567,7 +567,7 @@ DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
 
 #Refaire la database
 
-DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
+DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","Average # of putts","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
 
 
 DBfinal <- DBfinal %>%
@@ -583,3 +583,8 @@ DBfinal <- DBfinal %>%
   )
 
 save(DBfinal, file = "DBfinal.RData")
+
+
+#A partir de maintenand on utilise db final pour tout il faut juste la lancer avec le code ci dessous
+
+load("~/Golf/Golf/DBfinal.RData")
