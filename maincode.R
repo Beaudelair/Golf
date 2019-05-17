@@ -538,9 +538,46 @@ DB1$inch <- DB1$inch + DB1$feet
 #Tout a été réuni reste plus qu'à supprimer db1$feet et renommer l'autre, je sais c'est pas élégant désolé Léo
 #Ensuite faut faire la même pour height
 
-DB1 <- DB1 %>% separate(`Distance Left`, into = c("feet", "inch"))
+DB1 <- DB1 %>% separate(`Height`, into = c("feet1", "inch1"))
 #on rend numerique et on convertit les feets
 
+DB1$feet1 <- as.numeric(DB1$feet1)
+DB1$feet1 <- conv_unit(DB1$feet1,"ft","cm")
+
+#pareil pour les inchs
+
+DB1$inch1 <- as.numeric(DB1$inch1)
+DB1$inch1 <- conv_unit(DB1$inch1,"inch","cm")
+DB1$inch1 <- DB1$inch1 + DB1$feet1
+
+#pas oublier de recopier la colonne et supprimer l'autre
 
 
+
+DB1 <- DB1 %>% separate(`Weight`, into = c("Weight", "units"))
+DB1$Weight <- as.numeric(DB1$Weight)
+DB1$Weight <- conv_unit(DB1$Weight,"lbs","kg")
+
+#mainteant les dates
+DB1 <- DB1 %>% separate(`DOB`, into = c("Month", "Day", "Year1"), sep = "/")
+DB1$Year1 <-as.numeric(DB1$Year1) +1900
+
+DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
+
+
+#Refaire la database
+
+DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
+
+DBfinal <- DBfinal %>%
+  rename(
+    "Player Name" = NAME,
+    "Size in cm" = inch1 ,
+    "Round played this year" = ROUNDS ,
+    "Average Driving Distance" = `Driving Distance`,
+    "Driving Accuracy in %" =  `Accuracy in %`,
+    "Average distance left to the hole from a 20-30 meters shot" = inch,
+    "Consecutive cuts made" = TOTAL,
+    "Prize money earned" = MONEY
+  )
 
