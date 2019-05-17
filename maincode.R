@@ -569,6 +569,7 @@ DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
 
 DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
 
+
 DBfinal <- DBfinal %>%
   rename(
     "Player Name" = NAME,
@@ -581,3 +582,4 @@ DBfinal <- DBfinal %>%
     "Prize money earned" = MONEY
   )
 
+save(DBfinal, file = "DBfinal.RData")
