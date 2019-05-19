@@ -1,5 +1,7 @@
 # In this script we will do the data exploration andd vizualisation
 load("~/Golf/Golf/DBfinal.RData")
+install.packages("hablar")
+library(hablar)
 
 #graphique pour visualisation des datas
 
@@ -33,6 +35,7 @@ DBfinal %>%
   ggtitle("Average number of putts per round")+
   theme(plot.title = element_text(hjust = 0.5))
 
+
 DBfinal %>% 
   ggplot(aes(`Size in cm`, `Average Driving Distance`)) +
   geom_point(size=2, shape=18, color = "red") +
@@ -41,7 +44,6 @@ DBfinal %>%
   ggtitle("Average driving distance compared to size")+
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
-
 
 DBfinal %>% 
   ggplot(aes(`Weight`, `Average Driving Distance`)) +
@@ -88,11 +90,28 @@ DBfinal %>%
   ggtitle("Average driving accuracy compared to age")+
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
-install.packages("Hmisc")
+
 library(Hmisc)
 
 as.numeric(DBfinal$`Driving Accuracy in %`)
 as.numeric(DBfinal$`Average Driving Distance`)
 as.numeric(DBfinal$Weight)
 
-summary(rcorr(as.matrix(DBfinal[,3:14])))
+rcorr(as.matrix(DBfinal[,3:14]))
+
+
+#faire un tableau avec les gagnants uniquement et renommer variables + tableau avec les 10 meilleurs joueurs au niveau des victoire total
+#résoudre ce problème des dollars
+#sortir l'origine de chaque joueur aussi
+
+
+db2010<-DBfinal %>% filter(Year == "2010")
+dbother <- DBfinal %>% filter(Year!= "2010")
+
+db2010$`Prize money earned`<-as.numeric(gsub(",","",db2010$`Prize money earned`))
+dbother$`Prize money earned` <-substring(dbother$`Prize money earned`,2)
+dbother$`Prize money earned`<-as.numeric(gsub(",","",dbother$`Prize money earned`))
+
+DB2<-rbind(db2010,dbother)
+
+save(DB2, file = "DB2.RData")
