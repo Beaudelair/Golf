@@ -104,14 +104,3 @@ rcorr(as.matrix(DBfinal[,3:14]))
 #résoudre ce problème des dollars
 #sortir l'origine de chaque joueur aussi
 
-
-db2010<-DBfinal %>% filter(Year == "2010")
-dbother <- DBfinal %>% filter(Year!= "2010")
-
-db2010$`Prize money earned`<-as.numeric(gsub(",","",db2010$`Prize money earned`))
-dbother$`Prize money earned` <-substring(dbother$`Prize money earned`,2)
-dbother$`Prize money earned`<-as.numeric(gsub(",","",dbother$`Prize money earned`))
-
-DB2<-rbind(db2010,dbother)
-
-save(DB2, file = "DB2.RData")
