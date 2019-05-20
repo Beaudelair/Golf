@@ -567,8 +567,16 @@ DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
 
 
 #Refaire la database
+library(readxl)
+clean <- as.tibble(read_excel("clean.xlsx"))
+colnames(clean) <- clean[1, ]
+clean <- clean[-1 ,]
+clean <- clean %>% select(NAME, COUNTRY)
 
-DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","Average # of putts","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
+DB1 <- left_join(DB1, clean, by = c("NAME" = "NAME"))
+
+
+DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","COUNTRY","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","Average # of putts","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
 
 
 DBfinal <- DBfinal %>%
@@ -580,8 +588,9 @@ DBfinal <- DBfinal %>%
     "Driving Accuracy in %" =  `Accuracy in %`,
     "Average distance left to the hole from a 20-30 meters shot" = inch,
     "Consecutive cuts made" = TOTAL,
-    "Prize money earned" = MONEY
-  )
+    "Prize money earned" = MONEY,
+    "Country"= COUNTRY
+    )
 
 save(DBfinal, file = "DBfinal.RData")
 
@@ -596,6 +605,8 @@ dbother$`Prize money earned`<-as.numeric(gsub(",","",dbother$`Prize money earned
 dbfinal1<-rbind(db2010,dbother)
 
 save(dbfinal1, file = "dbfinal1.RData")
+
+
 
 
 
