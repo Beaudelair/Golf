@@ -522,6 +522,7 @@ library(measurements)
 
 
 #occupons nous des unités mtnt
+
 DB1$`Driving Distance` <- round(conv_unit(DB1$`Driving Distance`,"yd","m"))
 
 DB1 <- DB1 %>% separate(`Distance Left`, into = c("feet", "inch"))
@@ -585,6 +586,19 @@ DBfinal <- DBfinal %>%
 save(DBfinal, file = "DBfinal.RData")
 
 
+db2010<-DBfinal %>% filter(Year == "2010")
+dbother <- DBfinal %>% filter(Year!= "2010")
+
+db2010$`Prize money earned`<-as.numeric(gsub(",","",db2010$`Prize money earned`))
+dbother$`Prize money earned` <-substring(dbother$`Prize money earned`,2)
+dbother$`Prize money earned`<-as.numeric(gsub(",","",dbother$`Prize money earned`))
+
+dbfinal1<-rbind(db2010,dbother)
+
+save(dbfinal1, file = "dbfinal1.RData")
+
+
+
 #A partir de maintenand on utilise db final pour tout il faut juste la lancer avec le code ci dessous
 
-load("~/Golf/Golf/DBfinal.RData")
+load("~/Golf/Golf/dbfinal1.RData")
