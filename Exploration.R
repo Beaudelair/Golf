@@ -1,12 +1,12 @@
 # In this script we will do the data exploration andd vizualisation
-load("~/Golf/Golf/DBfinal.RData")
-install.packages("hablar")
+load("~/Golf/Golf/dbfinal1.RData")
+
 library(hablar)
 
 #graphique pour visualisation des datas
 
-DBfinal %>% 
-  ggplot(aes(x = NULL,y=`Average Driving Distance`))+
+dbfinal1 %>% 
+  ggplot(aes(x = NULL,y=distance))+
   ylab("Driving Distance")+
   geom_boxplot(fill="springgreen3")+
   theme_classic()+
@@ -15,8 +15,8 @@ DBfinal %>%
   ggtitle("Driving Distance Overview")+
   theme(plot.title = element_text(hjust = 0.5))
 
-DBfinal %>% 
-  ggplot(aes(x = NULL,y= c(as.numeric(`Average Scoring`))))+
+dbfinal1 %>% 
+  ggplot(aes(x = NULL,y= c(as.numeric(score))))+
   ylab("Average Scoring")+
   geom_boxplot(fill="springgreen3")+
   theme_classic()+
@@ -25,8 +25,8 @@ DBfinal %>%
   ggtitle("Average scoring per round")+
   theme(plot.title = element_text(hjust = 0.5))
 
-DBfinal %>% 
-  ggplot(aes(x = NULL,y= c(as.numeric(`Average # of putts`))))+
+dbfinal1 %>% 
+  ggplot(aes(x = NULL,y= c(as.numeric(putts))))+
   ylab("Average number of Putts")+
   geom_boxplot(fill="springgreen3")+
   theme_classic()+
@@ -36,8 +36,8 @@ DBfinal %>%
   theme(plot.title = element_text(hjust = 0.5))
 
 
-DBfinal %>% 
-  ggplot(aes(`Size in cm`, `Average Driving Distance`)) +
+dbfinal1 %>% 
+  ggplot(aes(size,distance)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Average Driving Distance")+ xlab("Size")+
@@ -45,8 +45,8 @@ DBfinal %>%
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
 
-DBfinal %>% 
-  ggplot(aes(`Weight`, `Average Driving Distance`)) +
+dbfinal1 %>% 
+  ggplot(aes(weight, distance)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Average Driving Distance")+ xlab("Weight")+
@@ -55,8 +55,8 @@ DBfinal %>%
   theme_classic()
 
 
-DBfinal %>% 
-  ggplot(aes(`Age`, `Average Driving Distance`)) +
+dbfinal1 %>% 
+  ggplot(aes(Age, distance)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Average Driving Distance")+ xlab("Age")+
@@ -64,8 +64,8 @@ DBfinal %>%
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
 
-DBfinal %>% 
-  ggplot(aes(`Size in cm`, `Driving Accuracy in %`)) +
+dbfinal1 %>% 
+  ggplot(aes(size, accuracy)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Driving Accuracy")+ xlab("Size")+
@@ -73,8 +73,8 @@ DBfinal %>%
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
 
-DBfinal %>% 
-  ggplot(aes(`Weight`, `Driving Accuracy in %`)) +
+dbfinal1 %>% 
+  ggplot(aes(weight, accuracy)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Driving Accuracy")+ xlab("Weight")+
@@ -82,8 +82,8 @@ DBfinal %>%
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
 
-DBfinal %>% 
-  ggplot(aes(`Age`, `Driving Accuracy in %`)) +
+dbfinal1 %>% 
+  ggplot(aes(`Age`, accuracy)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Driving Accuracy")+ xlab("Age")+
@@ -93,14 +93,27 @@ DBfinal %>%
 
 library(Hmisc)
 
-as.numeric(DBfinal$`Driving Accuracy in %`)
-as.numeric(DBfinal$`Average Driving Distance`)
-as.numeric(DBfinal$Weight)
 
-rcorr(as.matrix(DBfinal[,3:14]))
 
 
 #faire un tableau avec les gagnants uniquement et renommer variables + tableau avec les 10 meilleurs joueurs au niveau des victoire total
-#résoudre ce problème des dollars
-#sortir l'origine de chaque joueur aussi
+#résoudre ce problème des dollars -done 
+#sortir l'origine de chaque joueur aussi - done
 
+#bon voila ce que tu voulais mon petit léo adoré
+dbfinal1$Victories <-as.numeric(dbfinal1$victories)
+
+dbfinal2 <- dbfinal1 %>% rowwise() %>%filter(any(c(victories) %in% c(1:20)))
+
+
+#group by player sum summarized win
+
+dbfinal3 <- dbfinal2 %>% group_by(player) %>% summarise("Total Victories" = sum(victories))
+
+dbfinal4 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Dustin Johnson")))
+dbfinal5 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Tiger Woods")))
+dbfinal6 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Bubba Watson")))
+dbfinal7 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Jason Day")))
+dbfinal8 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Jordan Spieth")))
+
+dbfinal9 <- rbind(dbfinal4,dbfinal5,dbfinal6,dbfinal7,dbfinal8)

@@ -568,12 +568,13 @@ DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
 
 #Refaire la database
 library(readxl)
-clean <- as.tibble(read_excel("clean.xlsx"))
+clean <- as.tibble(read_excel("clean2.xlsx"))
 colnames(clean) <- clean[1, ]
 clean <- clean[-1,]
 clean1 <- clean %>% select(NAME,COUNTRY) %>% unique()
 
-
+#clean2 <- clean1 %>% group_by(NAME) %>% summarise("NUmber"=count(NAME))
+#kable(table(clean1$NAME))
 
 DB1 <- left_join(DB1,clean1, by = c("NAME"="NAME"))
 
@@ -583,19 +584,34 @@ DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","COUNTRY","ROUND
 
 DBfinal <- DBfinal %>%
   rename(
-    "Player Name" = NAME,
-    "Size in cm" = inch1 ,
-    "Round played this year" = ROUNDS ,
-    "Average Driving Distance" = `Driving Distance`,
-    "Driving Accuracy in %" =  `Accuracy in %`,
-    "Average distance left to the hole from a 20-30 meters shot" = inch,
-    "Consecutive cuts made" = TOTAL,
-    "Prize money earned" = MONEY,
-    "Country"= COUNTRY
+    "player" = NAME,
+    "size" = inch1 ,
+    "rounds" = ROUNDS ,
+    "distance" = `Driving Distance`,
+    "accuracy" =  `Accuracy in %`,
+    "approach" = inch,
+    "cuts" = TOTAL,
+    "money" = MONEY,
+    "country"= COUNTRY,
+    "victories"= `# of Victories`,
+    "weight" = Weight,
+    "gir" = `Green in regulation %`,
+    "putts"=`Average # of putts`,
+    "score"= `Average Scoring`,
+    "lscore"= `Average last round Scoring`
     )
 
-save(DBfinal, file = "DBfinal.RData")
-
+#Victories = number of victories
+#Money = Prize money earned
+#Cuts = consecutive cuts made
+#approach = Average distance left to the hole from a 20-30 meters shot
+#accuracy = Driving Accuracy in % 
+#distance = Average Driving Distance
+#rounds = Round played this year
+##"gir" = `Green in regulation %`,
+##"putts"=`Average # of putts`,
+##"score"= `Average Scoring`,
+#"lscore"= `Average last round Scoring`
 
 db2010<-DBfinal %>% filter(Year == "2010")
 dbother <- DBfinal %>% filter(Year!= "2010")
@@ -615,3 +631,4 @@ save(dbfinal1, file = "dbfinal1.RData")
 #A partir de maintenand on utilise db final pour tout il faut juste la lancer avec le code ci dessous
 
 load("~/Golf/Golf/dbfinal1.RData")
+
