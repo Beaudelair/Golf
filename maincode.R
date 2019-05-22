@@ -570,10 +570,12 @@ DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
 library(readxl)
 clean <- as.tibble(read_excel("clean.xlsx"))
 colnames(clean) <- clean[1, ]
-clean <- clean[-1 ,]
-clean <- clean %>% select(NAME, COUNTRY)
+clean <- clean[-1,]
+clean1 <- clean %>% select(NAME,COUNTRY) %>% unique()
 
-DB2 <- left_join(DB1, clean, by = c("NAME" = "NAME"))
+
+
+DB1 <- left_join(DB1,clean1, by = c("NAME"="NAME"))
 
 
 DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","COUNTRY","ROUNDS","Driving Distance","Accuracy in %", "Green in regulation %","inch","Average # of putts","TOTAL","Average Scoring","Average last round Scoring","MONEY","TOP 10","# of Victories")
