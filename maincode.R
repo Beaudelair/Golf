@@ -621,6 +621,8 @@ dbother$`Prize money earned` <-substring(dbother$`Prize money earned`,2)
 dbother$`Prize money earned`<-as.numeric(gsub(",","",dbother$`Prize money earned`))
 
 dbfinal1<-rbind(db2010,dbother)
+dbfinal1$victories <-as.numeric(dbfinal1$victories)
+dbfinal1$victories <- dbfinal1$victories %>% replace_na(0)
 
 save(dbfinal1, file = "dbfinal1.RData")
 
