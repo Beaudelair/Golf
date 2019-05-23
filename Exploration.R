@@ -56,7 +56,7 @@ dbfinal1 %>%
 
 
 dbfinal1 %>% 
-  ggplot(aes(Age, distance)) +
+  ggplot(aes(age, distance)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Average Driving Distance")+ xlab("Age")+
@@ -83,15 +83,13 @@ dbfinal1 %>%
   theme_classic()
 
 dbfinal1 %>% 
-  ggplot(aes(`Age`, accuracy)) +
+  ggplot(aes(age, accuracy)) +
   geom_point(size=2, shape=18, color = "red") +
   geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95)+
   ylab("Driving Accuracy")+ xlab("Age")+
   ggtitle("Average driving accuracy compared to age")+
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
-
-library(Hmisc)
 
 
 
@@ -113,6 +111,30 @@ dbfinal2 <- dbfinal1 %>% rowwise() %>%filter(any(c(victories) %in% c(1:20)))
 dbfinal3 <- dbfinal1 %>%  filter(player == "Dustin Johnson" | player == "Tiger Woods" | player == "Bubba Watson"| player == "Jordan Spieth"| player == "Jason Day"| player == "Phil Mickelson"|
                                     player == "Rory Mcllroy"| player == "Justin Rose"| player == "Justin Thomas"| player == "Zach Johnson" )
 
-typeof(dbfinal3$Year)
+typeof(dbfinal3$year)
 
-dbfinal3 %>% ggplot(aes(Year, victories, colors= player, fill = player))+geom_line()
+dbfinal3 %>% ggplot(aes(year, victories, colors= player, fill = player))+geom_line()
+
+
+
+
+Freq_country <- dbfinal1 %>% select(country,player) %>%
+  unique() %>% group_by(country) %>%
+  summarize(`Number of player` = length(country)) %>% na.omit() %>% 
+  mutate("freq" = (`Number of player`/ sum(`Number of player`))) %>% 
+  mutate(country=replace(country, country=="RSA", "ZAF")) 
+
+
+
+library(countrycode)
+
+library(maps)
+WorldData <- map_data('world') 
+WorldData$region<- countrycode(WorldData$region,'country.name', 'iso3c' )
+joint<-full_join(Freq_country,WorldData, by = c("country"="region"))
+
+
+ggplot(joint, aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = `Number of player`))+
+  scale_fill_viridis_c(option = "C")+ggtitle("World map temperature of march 2010")+theme(plot.title = element_text(hjust = 0.5))
+

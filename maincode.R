@@ -1,14 +1,5 @@
 #création de la nouvelle base de donnée avec web scrapping
 
-install.packages("rvest")
-install.packages("selectr")
-install.packages("xml2")
-install.packages("XML")
-install.packages("stringr")
-install.packages("twitteR")
-install.packages("purrr")
-install.packages("tidytext")
-
 library(xml2)
 library(rvest)
 library(stringr)
@@ -636,10 +627,11 @@ dbfinal1$distance <- as.numeric(dbfinal1$distance)
 dbfinal1$year <-as.Date(paste(dbfinal1$year, "12", "31", sep = "-"))
 
 dbfinal1$year <-format(as.Date(dbfinal1$year), "%d/%m/%Y")
+dbfinal1$year <- strptime(dbfinal1$year, "%d/%m/%Y")
 
 typeof(dbfinal1$year)
 
-
+dbfinal1 <- as_tibble(dbfinal1)
 
 save(dbfinal1, file = "dbfinal1.RData")
 
