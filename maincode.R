@@ -519,6 +519,7 @@ Measure.final <- Measure.final %>%
 
 DB1 <- left_join(DB, Measure.final, by = c("NAME" = "Players"))
 library(measurements)
+DB1 <- DB1 %>% filter(NAME != "Richard Johnson" & NAME != "Richard Lee")
 
 
 #occupons nous des unités mtnt
@@ -564,7 +565,6 @@ DB1 <- DB1 %>% separate(`DOB`, into = c("Month", "Day", "Year1"), sep = "/")
 DB1$Year1 <-as.numeric(DB1$Year1) +1900
 
 DB1 <- DB1 %>%  mutate(Age = Year-Year1 )
-
 
 #Refaire la database
 library(readxl)

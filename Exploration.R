@@ -101,19 +101,14 @@ library(Hmisc)
 #sortir l'origine de chaque joueur aussi - done
 
 #bon voila ce que tu voulais mon petit léo adoré
-dbfinal1$Victories <-as.numeric(dbfinal1$victories)
+dbfinal1$victories <-as.numeric(dbfinal1$victories)
 
 dbfinal2 <- dbfinal1 %>% rowwise() %>%filter(any(c(victories) %in% c(1:20)))
 
 
 #group by player sum summarized win
 
-dbfinal3 <- dbfinal2 %>% group_by(player) %>% summarise("Total Victories" = sum(victories))
 
-dbfinal4 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Dustin Johnson")))
-dbfinal5 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Tiger Woods")))
-dbfinal6 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Bubba Watson")))
-dbfinal7 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Jason Day")))
-dbfinal8 <- dbfinal1 %>% rowwise() %>%filter(any(c(player) %in% c("Jordan Spieth")))
 
-dbfinal9 <- rbind(dbfinal4,dbfinal5,dbfinal6,dbfinal7,dbfinal8)
+dbfinal3 <- dbfinal1 %>%  filter(player == "Dustin Johnson" | player == "Tiger Woods" | player == "Bubba Watson"| player == "Jordan Spieth"| player == "Jason Day"| player == "Phil Mickelson"|
+                                    player == "Rory Mcllroy"| player == "Justin Rose"| player == "Justin Thomas"| player == "Zach Johnson" )
