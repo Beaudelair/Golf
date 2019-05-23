@@ -626,10 +626,6 @@ dbfinal1$distance <- as.numeric(dbfinal1$distance)
 
 dbfinal1$year <-as.Date(paste(dbfinal1$year, "12", "31", sep = "-"))
 
-dbfinal1$year <-format(as.Date(dbfinal1$year), "%d/%m/%Y")
-dbfinal1$year <- strptime(dbfinal1$year, "%d/%m/%Y")
-
-typeof(dbfinal1$year)
 
 dbfinal1 <- as_tibble(dbfinal1)
 

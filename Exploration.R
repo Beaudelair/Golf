@@ -138,3 +138,11 @@ ggplot(joint, aes(x = long, y = lat, group = group)) +
   geom_polygon(aes(fill = `Number of player`))+
   scale_fill_viridis_c(option = "C")+ggtitle("World map temperature of march 2010")+theme(plot.title = element_text(hjust = 0.5))
 
+
+dbfinal1 %>% ggplot(aes(distance, accuracy))+ geom_point()+geom_smooth(se=FALSE)
+
+dbfinal1 %>% ggplot(aes(year, distance/accuracy)) + geom_point()+geom_smooth()
+
+dbfinal1 %>% ggplot(aes(score, lscore))+ geom_point() + geom_smooth()
+
+dbfinal1 %>% ggplot(aes(distance/(100-accuracy), putts)) + geom_point() + geom_smooth(se=FALSE)
