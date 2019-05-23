@@ -497,7 +497,6 @@ Measurements.Z <- scraping('http://newsday.sportsdirectinc.com/golf/pga-players.
 
 Measure.final <- rbind(Measurements.A,Measurements.B,Measurements.C,Measurements.D,Measurements.E,Measurements.F,Measurements.G,Measurements.H,Measurements.I,Measurements.J,Measurements.K,Measurements.L,Measurements.M,Measurements.N,Measurements.O,Measurements.P,Measurements.Q,Measurements.R,Measurements.S,Measurements.T,Measurements.U,Measurements.V,Measurements.W,Measurements.X,Measurements.Y,Measurements.Z)
 
-
 #Création de la première base de donnée
 DB <-list(GIR.FINAL, Putts.per.round.FINAL, Average.scoring.FINAL, Distance.from.20.30.FINAL, Driving.Accuracy.final, Driving.distance.final, Last.round.scoring.FINAL, Top10.FINAL, Victory.FINAL, Money.FINAL,Cuts.FINAL)%>%
   reduce(left_join, by = c("NAME" = "NAME","Year" = "Year")) %>% as.tibble()
@@ -598,7 +597,9 @@ DBfinal <- DBfinal %>%
     "gir" = `Green in regulation %`,
     "putts"=`Average # of putts`,
     "score"= `Average Scoring`,
-    "lscore"= `Average last round Scoring`
+    "lscore"= `Average last round Scoring`,
+    "year" = Year,
+    "age" = Age
     )
 
 #Victories = number of victories
@@ -613,16 +614,32 @@ DBfinal <- DBfinal %>%
 ##"score"= `Average Scoring`,
 #"lscore"= `Average last round Scoring`
 
-db2010<-DBfinal %>% filter(Year == "2010")
-dbother <- DBfinal %>% filter(Year!= "2010")
+db2010<-DBfinal %>% filter(year == "2010")
+dbother <- DBfinal %>% filter(year!= "2010")
 
-db2010$`Prize money earned`<-as.numeric(gsub(",","",db2010$`Prize money earned`))
-dbother$`Prize money earned` <-substring(dbother$`Prize money earned`,2)
-dbother$`Prize money earned`<-as.numeric(gsub(",","",dbother$`Prize money earned`))
+db2010$money<-as.numeric(gsub(",","",db2010$money))
+dbother$money<-substring(dbother$money,2)
+dbother$money<-as.numeric(gsub(",","",dbother$money))
 
 dbfinal1<-rbind(db2010,dbother)
 dbfinal1$victories <-as.numeric(dbfinal1$victories)
 dbfinal1$victories <- dbfinal1$victories %>% replace_na(0)
+
+
+
+
+dbfinal1$age <- as.numeric(dbfinal1$age)
+dbfinal1$size <- as.numeric(dbfinal1$size)
+dbfinal1$weight <- as.numeric(dbfinal1$weight)
+dbfinal1$distance <- as.numeric(dbfinal1$distance)
+
+dbfinal1$year <-as.Date(paste(dbfinal1$year, "12", "31", sep = "-"))
+
+dbfinal1$year <-format(as.Date(dbfinal1$year), "%d/%m/%Y")
+
+typeof(dbfinal1$year)
+
+
 
 save(dbfinal1, file = "dbfinal1.RData")
 
