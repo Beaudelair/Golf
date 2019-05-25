@@ -101,7 +101,9 @@ dbfinal1 %>%
 #bon voila ce que tu voulais mon petit léo adoré
 
 
-dbfinal2 <- dbfinal1 %>% rowwise() %>%filter(any(c(victories) %in% c(1:20)))
+dbfinal2 <- dbfinal1 %>% 
+  rowwise() %>%
+  filter(any(c(victories) %in% c(1:20)))
 
 
 #group by player sum summarized win
@@ -113,7 +115,9 @@ dbfinal3 <- dbfinal1 %>%  filter(player == "Dustin Johnson" | player == "Tiger W
 
 typeof(dbfinal3$year)
 
-dbfinal3 %>% ggplot(aes(year, victories, colors= player, fill = player))+geom_line()
+dbfinal3 %>% 
+  ggplot(aes(year, victories, colors= player, fill = player))+
+  geom_line()
 
 
 
@@ -139,10 +143,18 @@ ggplot(joint, aes(x = long, y = lat, group = group)) +
   scale_fill_viridis_c(option = "C")+ggtitle("World map temperature of march 2010")+theme(plot.title = element_text(hjust = 0.5))
 
 
-dbfinal1 %>% ggplot(aes(distance, accuracy))+ geom_point()+geom_smooth(se=FALSE)
+dbfinal1 %>% 
+  ggplot(aes(distance, accuracy)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
 
-dbfinal1 %>% ggplot(aes(year, distance/accuracy)) + geom_point()+geom_smooth()
+dbfinal1 %>% 
+  ggplot(aes(year, distance / accuracy)) +
+  geom_point() +
+  geom_smooth()
 
-dbfinal1 %>% ggplot(aes(score, lscore))+ geom_point() + geom_smooth()
+dbfinal1 %>% 
+  ggplot(aes(score, lscore)) +
+  geom_point() + 
+  geom_smooth()
 
-dbfinal1 %>% ggplot(aes(distance/(100-accuracy), putts)) + geom_point() + geom_smooth(se=FALSE)
