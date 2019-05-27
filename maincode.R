@@ -654,7 +654,7 @@ load("~/Golf/Golf/dbfinal1.RData")
 
 #model uniweight, first before data exploration to binarize all the variables
 
-dbfinal1$dummy<- as.numeric(dbfinal2$dummy)
+#dbfinal1$dummy<- as.numeric(dbfinal2$dummy)
 
 
 dbfinal1%>% 
@@ -753,6 +753,23 @@ levels(dbfinal2$cuts_bin)[levels(dbfinal2$cuts_bin)=="[ 2, 8)"] <- "0"
 levels(dbfinal2$cuts_bin)[levels(dbfinal2$cuts_bin)=="[ 8,43]"] <- "1"
 levels(dbfinal2$cuts_bin)
 
+
+
+#up
+
+dbfinal2 %>% 
+  ggplot(aes(victories, fill=dummy)) +
+  geom_density(alpha=0.4)+
+  theme_bw()
+
+dbfinal2 <- dbfinal2 %>%
+  ungroup()  %>% 
+  mutate(victories_bin = Hmisc::cut2(dbfinal2$victories, 1)) 
+
+levels(dbfinal2$victories_bin)[levels(dbfinal2$victories_bin)=="0"] <- "0"
+levels(dbfinal2$victories_bin)[levels(dbfinal2$victories_bin)=="[1,6]"] <- "1"
+levels(dbfinal2$victories_bin)
+
 #fitted value
 dbfinal2$distance_bin <- as.numeric(as.character(dbfinal2$distance_bin))
 dbfinal2$cuts_bin <-as.numeric(as.character(dbfinal2$cuts_bin))
@@ -760,6 +777,7 @@ dbfinal2$putts_bin <-as.numeric(as.character(dbfinal2$putts_bin))
 dbfinal2$score_bin <-as.numeric(as.character(dbfinal2$score_bin))
 dbfinal2$lscore_bin <-as.numeric(as.character(dbfinal2$lscore_bin))
 dbfinal2$money_bin <-as.numeric(as.character(dbfinal2$money_bin))
+dbfinal2$victories_bin <-as.numeric(as.character(dbfinal2$victories_bin))
 
 dbfinal3<-dbfinal2[-which(is.na(dbfinal2$lag_vic)),]
 dbfinal3[ "cuts_bin"][is.na(dbfinal3["cuts_bin"])] <- 0
@@ -768,14 +786,17 @@ dbfinal3["lscore_bin"][is.na(dbfinal3["lscore_bin"])] <- 0
 
 
 
-dbfinal2 <- dbfinal3 %>% mutate("fitted" = distance_bin+cuts_bin+putts_bin+score_bin+lscore_bin+money_bin)
+dbfinal2 <- dbfinal3 %>% mutate("fitted" = 2*distance_bin+cuts_bin+putts_bin+4*score_bin+2*lscore_bin+4*money_bin+2*victories_bin)
 
 
-plot(dbfinal2$fitted)
+dbfinal2 %>% 
+  ggplot(aes(fitted, fill=dummy)) +
+  geom_density(alpha=0.4)+
+  theme_bw()
 
 
 
-predicted.classes <- ifelse(dbfinal2$fitted >= 5, "1", "0")
+predicted.classes <- ifelse(dbfinal2$fitted >= 16, "1", "0")
 
 
 
@@ -783,3 +804,6 @@ library(e1071)
 library(caret)
 cm<-confusionMatrix(data=as.factor(predicted.classes), 
                     reference=as.factor(dbfinal2$lag_vic))
+
+cm
+
