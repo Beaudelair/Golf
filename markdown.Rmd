@@ -1,0 +1,99 @@
+---
+title: "Report"
+author: "David Pitteloud & Léonard Philippossian"
+date: "28/05/2019"
+output: html_document
+toc: true
+toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+Golf is a sport who was firstly only played by elites. It basically consists to put a little ball in a hole, whith the help of a wide array of differents stick, commonly called clubs. A golf course has 18 holes and every all is allocated a number of shots which should normal. Those standars are 3,4 and 5. The number of shots allocated to a hole is defined by distance. Logically the longest it is, the more shot a player will have.
+
+The PGA tour is the greatest circuit of golf in the world. Only the best player may earn a card to play on it. A regular competition is played on 4 days, and all the scores are cumulated. However after 2 days a cut is made and only the 70 best player are allowed to continue.
+
+We tried to find many database but as none of them where satisfying we decided to form it all by our selves.
+We went on the PGA tour website and we selected variables which seemed the most appropriate according our knowledge.
+
+Definition :
+putts
+fairway
+green
+rough
+
+
+
+
+Datas were scrapped from the PGA Tour website by using this function:
+
+```{r}
+
+scraping <- function(link, date){
+  webpage <- link %>% read_html()
+  
+  tbls_ls <- webpage %>%
+    html_nodes("table") %>%
+    .[2] %>%
+    html_table(fill = TRUE)
+  
+  Variable <-Variable(tbls_ls[[1]])
+  
+  Variable <- Variable[,-c(1,2,4,6,7)]
+  Variable <- Variable %>% 
+    rename(NAME = `PLAYER NAME`, 
+           "Variable" = Variable)
+  
+  Year <- nrow (Variable)
+  Variable$Year <- rep(date, time= nrow (Variable))
+  return(Variable)
+}
+
+```
+
+Our data base is the following 
+
+```{r}
+
+knitr::kable(dbfinal1)
+
+
+```
+
+As those variables here are some further details about what they represent:
+
+rounds : number of round played during the year, a unit of round is equivalent to one day in a tournament.
+distance : This is the distance covered in average by the shot hit with the driver, which is the club that covers the most distance
+accuracy : It is a ratio between the number of drive that did land on the fairway and the total amount of drive attempted
+gir : It is the also a ratio between the number of times that the player did reach the green in -2 shots than the par over the total of holes played
+approach : distance left to the hole in average after a shot from 20-30 meters
+putts : number of putts taken per round in average
+cuts : consecutive numbers of time that a player did qualify for the 3 and 4 day of a tournament
+score : average score, which corresponds to the number of shot played
+lscore: average number of shot played the last day
+Top10 : number of times a player did finish in the Top 10
+
+
