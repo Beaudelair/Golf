@@ -16,6 +16,25 @@ library(hablar)
 library(class)
 library(FactoInvestigate)
 library(factoextra)
+library(rnaturalearth)
+library(xml2)
+library(rvest)
+library(stringr)
+library(XML)
+library(twitteR)
+library(purrr)
+library(tidytext)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(scales)
+library(broom)
+library(ggplot2)
+library(tidyverse)
+library(knitr)
+
+install.packages("FactorMineR")
+
 #Create dummy for victory 
 
 load("~/Golf/Golf/dbfinal1.RData")
@@ -92,7 +111,7 @@ cm$table
 
 dbfinal2$lag_vic1<-as.numeric(as.character(dbfinal2$lag_vic))
 dbfinal2$lag_vic <-as.factor(as.character(dbfinal2$lag_vic))
-mtcars.pca <- PCA(dbfinal1[c('score','money', 'victories', 'cuts','rounds', 'size', 'age', 'distance', 'lag_vic1', 'accuracy')],scale.unit=TRUE, ncp=5, graph=T)
+mtcars.pca <- Investigate(dbfinal1[res,c('score','money', 'victories', 'cuts','rounds', 'size', 'age', 'distance', 'lag_vic1', 'accuracy')],scale.unit=TRUE, ncp=5, graph=T)
 
 typeof(dbfinal1[,20])
 plot.PCA(mtcars.pca, choix="var")
