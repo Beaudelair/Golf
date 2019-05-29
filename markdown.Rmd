@@ -2,36 +2,19 @@
 title: "Report"
 author: "David Pitteloud & Léonard Philippossian"
 date: "28/05/2019"
-output: html_document
-toc: true
-toc_depth: 2
+output:
+  html_document:
+    toc: true
+    theme: united
+
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
+# Overview
 Golf is a sport who was firstly only played by elites. It basically consists to put a little ball in a hole, whith the help of a wide array of differents stick, commonly called clubs. A golf course has 18 holes and every all is allocated a number of shots which should normal. Those standars are 3,4 and 5. The number of shots allocated to a hole is defined by distance. Logically the longest it is, the more shot a player will have.
 
 The PGA tour is the greatest circuit of golf in the world. Only the best player may earn a card to play on it. A regular competition is played on 4 days, and all the scores are cumulated. However after 2 days a cut is made and only the 70 best player are allowed to continue.
@@ -39,12 +22,27 @@ The PGA tour is the greatest circuit of golf in the world. Only the best player 
 We tried to find many database but as none of them where satisfying we decided to form it all by our selves.
 We went on the PGA tour website and we selected variables which seemed the most appropriate according our knowledge.
 
+# Motivation  
+As we are both golf fans, this subject was pretty obvious. In addition, David as a work experience as a caddy on the European Tour. Caddies are the guys carrying the bag of a golfer in a competition. In addition, they are giving some advices to the golfer on what shot to do at a certain point. Caddies have a very difficult task to calculate of long a shot should be. It may sound very trivial, but they are many factors influencing a shot, more than someone oustide of golf could imagine. Factors could be obvious such as slope or wind, but it can be also more tricky to imagine it. For example factors such as temperature, altitude, or inclination of the grass. Considering some many factors the work of a caddy is very tough.
+This experience made us on wonder on the complexity of a golf shot for a pro golfer, and if it could be predicted what player regarding personnal attributes could win a competition.
+
+# Related Work 
+Firstly, we saw a database on kaggle, and this made us think that it would be possible to do a project. However, after having looked at this database, we noticed that more than 80% of the datas were missing.It was not really meaningfull to proceed to a further analysis. 
+
+As we could not find any convenient database, as in some cases variables were not judged convenient from our expertise. Therefore, we decided to form our own database, by collecting all the relevant information we wanted on the web.
+
+Initial Questions: Our goal is to identify any characteritics, that may define the reason why a player would win a competition. We wanted to identify different type of play, and how it could affect the results.
+
+
+Data:
+
 Definition :
 putts
 fairway
 green
 rough
 
+D
 
 
 
@@ -78,9 +76,6 @@ Our data base is the following
 
 ```{r}
 
-knitr::kable(dbfinal1)
-
-
 ```
 
 As those variables here are some further details about what they represent:
@@ -97,3 +92,5 @@ lscore: average number of shot played the last day
 Top10 : number of times a player did finish in the Top 10
 
 
+
+To discover the database, data have been plotted, and here the most interesting:

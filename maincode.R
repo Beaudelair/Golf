@@ -1,5 +1,5 @@
 #création de la nouvelle base de donnée avec web scrapping
-
+library(rmarkdown)
 library(xml2)
 library(rvest)
 library(stringr)
@@ -575,7 +575,7 @@ DBfinal <- DB1 %>% select("NAME", "Year","Age","inch1","Weight","COUNTRY","ROUND
 DBfinal <- DBfinal %>%
   rename(
     "player" = NAME,
-    "size" = inch1 ,
+    "height" = inch1 ,
     "rounds" = ROUNDS ,
     "distance" = `Driving Distance`,
     "accuracy" =  `Accuracy in %`,
